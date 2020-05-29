@@ -9,7 +9,7 @@ class FileSendProcess {
 
     // 결과 리턴 함수
     returnData(filename, status, msg) {
-        return {"filename": filename, "status": status, "msg": msg};
+        return JSON.stringify({"filename": filename, "status": status, "msg": msg});
     }
 
     // 파일명 추출
@@ -21,9 +21,9 @@ class FileSendProcess {
     async isFileExistsPromise(filePath) {
         return new Promise((resolve, reject) => {
             fs.stat(filePath, (err, stats) => {
-                // if(err) console.error(err);
-                if(err) resolve({status: STATUS_ERROR, msg: JSON.stringify(err)});
-                else resolve({status: STATUS_SUCCESS, msg: stats.size});
+                let fileNames = this.watchFileName(filePath);
+                if(err) resolve(this.returnData(fileNames, STATUS_ERROR, err));
+                else resolve(this.returnData(fileNames, STATUS_SUCCESS, stats.size));
             });
         });
     }
@@ -33,10 +33,9 @@ class FileSendProcess {
         return new Promise((resolve, reject) => {
             let ret = [];
             filePath.forEach((items, index) => {
-                let fileNames = this.watchFileName(items);
                 this.isFileExistsPromise(items).then((stats) => {
-                    ret.push(this.returnData(fileNames, stats.status, stats.msg));
-                    if(filePath.length -1 === index) resolve(ret);
+                    ret.push(JSON.parse(stats));
+                    if(filePath.length -1 === index) resolve(JSON.stringify(ret));
                 });
             });
         });
@@ -44,11 +43,12 @@ class FileSendProcess {
 
     // 동기 - 파일 존재 유무 확인
     isFileExists(filePath) {
+        let fileNames = this.watchFileName(filePath);
         try {
             const stats = fs.statSync(filePath);
-            return {status: STATUS_SUCCESS, msg: stats.size};
+            return this.returnData(fileNames ,STATUS_SUCCESS, stats.size);
         } catch(e) {
-            return {status: STATUS_ERROR, msg: JSON.stringify(e)};
+            return this.returnData(fileNames, STATUS_ERROR, e);
         }
     }
 
@@ -56,20 +56,18 @@ class FileSendProcess {
     arrFileCheckSync(filePath, callback) {
         let ret = [];
         filePath.forEach((items) => {
-            let fileNames = this.watchFileName(items);
-            let res = this.isFileExists(items);
-            ret.push(this.returnData(fileNames, res.status, res.msg));
+            ret.push(JSON.parse(this.isFileExists(items)));
         });
-        if(callback === undefined) return ret;
-        else callback(ret);
+        if(callback === undefined) return JSON.stringify(ret);
+        else callback(JSON.stringify(ret));
     }
 
     // 비동기 파일 확장자 검사(전채 경로 방식/파일명 방식 둘다 가능)
     async getExtChk(filePath) {
         return new Promise((resolve, reject) => {
-            if(filePath.lastIndexOf('/') != -1) filePath = this.watchFileName(filePath);
+            if(filePath.includes('/')) filePath = this.watchFileName(filePath);
             let extName = path.extname(filePath).replace('.', '');
-            if(EXT_LIST.indexOf(extName) != -1) resolve(this.returnData(filePath, STATUS_SUCCESS, extName));
+            if(EXT_LIST.includes(extName)) resolve(this.returnData(filePath, STATUS_SUCCESS, extName));
             else resolve(this.returnData(filePath, STATUS_ERROR, "Unusable extension."));
         });
     }
@@ -80,8 +78,8 @@ class FileSendProcess {
             let ret = [];
             filePath.forEach((items, index) => {
                 this.getExtChk(items).then((result) => {
-                    ret.push(result);
-                    if(filePath.length -1 === index) resolve(ret);
+                    ret.push(JSON.parse(result));
+                    if(filePath.length -1 === index) resolve(JSON.stringify(ret));
                 });
             });
         });
@@ -89,9 +87,9 @@ class FileSendProcess {
 
     // 동기 파일 확장자 검사(전채 경로 방식/파일명 방식 둘다 가능)
     getExtChkSync(filePath) {
-        if(filePath.lastIndexOf('/') != -1) filePath = this.watchFileName(filePath);
+        if(filePath.includes('/')) filePath = this.watchFileName(filePath);
         let extName = path.extname(filePath).replace('.', '');
-        if(EXT_LIST.indexOf(extName) != -1) return this.returnData(filePath, STATUS_SUCCESS, extName);
+        if(EXT_LIST.includes(extName)) return this.returnData(filePath, STATUS_SUCCESS, extName);
         else return this.returnData(filePath, STATUS_ERROR, "Unusable extension.");
     }
 
@@ -99,10 +97,10 @@ class FileSendProcess {
     arrFileExtCheckSync(filePath, callback) {
         let ret = [];
         filePath.forEach(items => {
-            ret.push(this.getExtChkSync(items));
+            ret.push(JSON.parse(this.getExtChkSync(items)));
         });
-        if(callback === undefined) return ret;
-        else callback(ret);
+        if(callback === undefined) return JSON.stringify(ret);
+        else callback(JSON.stringify(ret));
     }
     // 파일 전송
 
@@ -110,57 +108,53 @@ class FileSendProcess {
 }
 
 var filePath1 = '/Users/minsungkim/Documents/project/javascript-test/currentSampleFile.txt';
-var filePath2 = '/Users/minsungkim/Documents/project/javascript-test/currentSampleFile2.text';
+var filePath2 = '/Users/minsungkim/Documents/project/javascript-test/currentSampleFile1.txt';
 
 const fsp = new FileSendProcess();
-
-// Promise 방식
-function apptest() {
-    fsp.arrFileCheckPromise([filePath1, filePath2]).then((result) => {
-        console.log(`Promise방식 - ${JSON.stringify(result)}`);
-    });
-}
-// apptest();
-
 
 // async ~ await방식
 async function app() {
     const result = await fsp.arrFileCheckPromise([filePath1, filePath2]);
-    console.log(`비동기 - ${JSON.stringify(result)}`);
+    console.log(`비동기 - ${result}`);
 }
 // app();
+
+// Promise 방식
+function apptest() {
+    fsp.arrFileCheckPromise([filePath1, filePath2]).then((result) => {
+        console.log(`Promise방식 - ${result}`);
+    });
+}
+// apptest();
 
 // 동기 방식
 function apps() {
     const result = fsp.arrFileCheckSync([filePath1, filePath2]);
-    console.log(`동기 - ${JSON.stringify(result)}`);
+    console.log(`동기 - ${result}`);
 }
 // apps();
 
 // 동기 방식 (콜백)
 function appsCallback() {
     fsp.arrFileCheckSync([filePath1, filePath2], (result) => {
-        console.log(`동기(콜백) - ${JSON.stringify(result)}`);
+        console.log(`동기(콜백) - ${result}`);
     });
 }
 // appsCallback();
 
-
+// 파일 확장자 검사
 // const fileExt = fsp.getExtChk(filePath2);
 // console.log(fileExt)
 
 // const fileExts = fsp.arrFileExtCheckSync([filePath1, filePath2]);
 // console.log(fileExts);
 
-function arrFileExtCheckerCallbackDone() {
-    fsp.arrFileExtCheckSync([filePath1, filePath2], (result) => {
-        console.log(`동기(콜백)-${JSON.stringify(result)}`);
-    });
-}
-// arrFileExtCheckerCallbackDone();
-
 async function fileExtChecker() {
     const result = await fsp.arrFileExtCheck([filePath1, filePath2]);
     console.log(result);
 }
-// fileExtChecker();
+fileExtChecker();
+
+// fsp.getExtChk(filePath1).then((result) => {
+//     console.log(result);
+// })
