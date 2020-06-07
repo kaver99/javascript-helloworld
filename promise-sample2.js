@@ -18,7 +18,7 @@ class FileSendProcess {
     }
     
     // 비동기 - 파일 존재 유무 확인
-    async isFileExistsPromise(filePath) {
+    isFileExistsPromise(filePath) {
         return new Promise((resolve, reject) => {
             fs.stat(filePath, (err, stats) => {
                 let fileNames = this.watchFileName(filePath);
@@ -29,7 +29,7 @@ class FileSendProcess {
     }
 
     // 비동기 - 파일 여러개 크기 확인
-    async arrFileCheckPromise(filePath) {
+    arrFileCheckPromise(filePath) {
         return new Promise((resolve, reject) => {
             let ret = [];
             filePath.forEach((items, index) => {
@@ -63,7 +63,7 @@ class FileSendProcess {
     }
 
     // 비동기 파일 확장자 검사(전채 경로 방식/파일명 방식 둘다 가능)
-    async getExtChk(filePath) {
+    getExtChk(filePath) {
         return new Promise((resolve, reject) => {
             if(filePath.includes('/')) filePath = this.watchFileName(filePath);
             let extName = path.extname(filePath).replace('.', '');
@@ -73,7 +73,7 @@ class FileSendProcess {
     }
 
     // 비동기 배열 파일 확장자 검사
-    async arrFileExtCheck(filePath) {
+    arrFileExtCheck(filePath) {
         return new Promise((resolve, reject) => {
             let ret = [];
             filePath.forEach((items, index) => {
