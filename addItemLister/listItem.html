@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <title>Item Lister</title>
+</head>
+<body>
+  <header id="main-header" class="bg-success text-white p-4 mb-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1 id="header-title">Item Lister</h1>
+        </div>
+        <div class="col-md-6 align-self-center">
+          <input type="text" class="form-control" id="filter" placeholder="Search Items..." />
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <div id="main" class="card card-body">
+      <h2 class="title">Add Items</h2>
+      <form id="addForm" class="form-inline mb-3">
+        <input type="text" class="form-control mr-2" id="item" />
+        <select class="form-control mr-2">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+        <input type="submit" class="btn btn-dark" value="Submit">
+      </form>
+      <h2 class="title">Items</h2>
+      <ul id="items" class="list-group">
+        <li class="list-group-item">Item 1<button class="btn btn-danger btn-sm float-right delete">X</button></li>
+        <li class="list-group-item">Item 2<button class="btn btn-danger btn-sm float-right delete">X</button></li>
+        <li class="list-group-item">Item 3<button class="btn btn-danger btn-sm float-right delete">X</button></li>
+        <li class="list-group-item">Item 4<button class="btn btn-danger btn-sm float-right delete">X</button></li>
+      </ul>
+      <div id="output"></div>
+      <br />
+      <button class="btn btn-dark btn-block" id="button">Click Here</button>
+      <br />
+      <div id="box" style="width:400px;height:200px;background:#f4f4f4;"><h3>Box Event Domain</h3></div>
+    </div>
+  </div>
+
+  <script src="../../addItemLister/js/dom-demo.js"></script>
+</body>
+</html>
+
+<!-- http://127.0.0.1:5500/addItemLister/listItem.html -->

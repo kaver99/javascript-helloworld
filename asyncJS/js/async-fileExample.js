@@ -5,7 +5,7 @@ const STATUS_SUCCESS = 'success';
 const STATUS_ERROR = 'error';
 const EXT_LIST = ['txt', 'png', 'jpg', 'jpeg', 'gif'];
 
-class FileSendProcess {
+class AsyncFileExample {
 
     // 결과 리턴 함수
     returnData(filename, status, msg) {
@@ -110,7 +110,7 @@ class FileSendProcess {
 var filePath1 = '/Users/minsungkim/Documents/project/javascript-test/currentSampleFile.txt';
 var filePath2 = '/Users/minsungkim/Documents/project/javascript-test/currentSampleFile1.txt';
 
-const fsp = new FileSendProcess();
+const fsp = new AsyncFileExample();
 
 // async ~ await방식
 async function app() {

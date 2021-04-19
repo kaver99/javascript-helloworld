@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>PDF Viewer</title>
+</head>
+<body>
+  <div class="top-bar">
+    <button class="btn" id="prev-page">
+      <i class="fas fa-arrow-circle-left"></i> Prev Page
+    </button>
+    <button class="btn" id="next-page">
+      Next Page <i class="fas fa-arrow-circle-right"></i>
+    </button>
+    <span class="page-info">
+      Page: <span id="page-num"></span> / <span id="page-count"></span>
+    </span>
+  </div>
+
+  <canvas id="pdf-render"></canvas>
+  
+  <!-- <script src="https://mozila.github.io/pdf.js/build/pdf.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js" integrity="sha512-SG4yH2eYtAR5eK4/VL0bhqOsIb6AZSWAJjHOCmfhcaqTkDviJFoar/VYdG96iY7ouGhKQpAg3CMJ22BrZvhOUA==" crossorigin="anonymous"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>

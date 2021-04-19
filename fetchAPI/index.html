@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch API SandBox</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <h1 class="display-4 mb-4">Fetch API SandBox</h1>
+    <div class="d-flex">
+      <button id="getText" class="btn btn-primary mr-4">Get Text</button>
+    <button id="getUsers" class="btn btn-success mr-4">Get JSON</button>
+    <button id="getPosts" class="btn btn-warning mr-4">GET API DATA</button>
+    </div>
+    <hr />
+    <div id="output"></div>
+    <br />
+    <form id="addPost">
+      <div class="form-group">
+        <input type="text" id="title" class="form-control" placeholder="Title" />
+      </div>
+      <div class="form-group">
+        <textarea id="body" class="form-control" placeholder="Body"></textarea>
+      </div>
+      <input type="submit" class="btn btn-secondary" value="Submit" />
+    </form>
+  </div>
+  <script>
+    document.getElementById('getText').addEventListener('click', getText);
+    document.getElementById('getUsers').addEventListener('click', getUsers);
+    document.getElementById('getPosts').addEventListener('click', getPosts);
+    document.getElementById('addPost').addEventListener('submit', addPost);
+
+    // file read & print
+    function getText() {
+      // fetch('./txt/sample.txt')
+      //   .then(function(res) {
+      //     return res.text(); // Promise Response
+      //   })
+      //   .then(function(data) {
+      //     console.log(data);
+      //   })
+      fetch('./txt/sample.txt')
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById('output').innerHTML = data;
+        })
+        .catch(err => console.log(err));
+    }
+
+    // json file read & print
+    function getUsers() {
+      fetch('./json/users.json')
+        .then(res => res.json())
+        .then(data => {
+          let output = '<h2 class="mb-4">Users</h2>';
+          data.forEach(function(user) {
+            output += `
+              <ul class="list-group mb-3">
+                <li class="list-group-item">ID: ${user.id}</li>
+                <li class="list-group-item">ID: ${user.name}</li>
+                <li class="list-group-item">ID: ${user.email}</li>
+              </ul>
+            `;
+          });
+          document.getElementById('output').innerHTML = output;
+        })
+    }
+
+    // sample Data URL : https://jsonplaceholder.typicode.com/posts
+    function getPosts() {
+      fetch('https://jsonplaceholder.typicode.com/posts')
+        .then(res => res.json())
+        .then(data => {
+          let output = '<h2 class="mb-4">Posts</h2>';
+          data.forEach(function(post) {
+            output += `
+              <div class="card card-body mb-3">
+                <h3>${post.title}</h3>
+                <p>${post.body}</p>
+              </div>
+            `;
+          });
+          document.getElementById('output').innerHTML = output;          
+        })
+    }
+
+    // Server에 Post방식으로 데이터 전송
+    function addPost(e) {
+      e.preventDefault();
+
+      let title = document.getElementById('title').value;
+      let body = document.getElementById('body').value;
+
+      fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ title: title, body: body })
+      })
+      .then(res => res.json())
+      .then(data => console.log(data));
+    }
+
+  </script>
+</body>
+</html>
